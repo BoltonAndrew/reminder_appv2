@@ -1,7 +1,8 @@
 /*jshint esversion:8*/
-const figlet = require("figlet");
-const inquirer = require("inquirer");
-const { addNote, listNotes, removeNote } = require("../utils/notes");
+const figlet = require('figlet');
+const inquirer = require('inquirer');
+const { addNote, listNotes, removeNote } = require('../utils/notes');
+const chalk = require('chalk');
 
 const topLevelQuestion = [
     { type: "list", name: "options", message: "What would you like to do?", choices: ["add", "list", "remove", "exit"]}
@@ -12,7 +13,7 @@ const addQuestion = [{ type: "input", name: "add", message: "What would you like
 const removeQuestion = [{ type: "number", name: "remove", message: "What would you like to remove? Please type a number" }];
 
 const main = () => {
-    console.log(figlet.textSync("Naotes App"));
+    console.log(chalk.blue(figlet.textSync("Notes App", { font: "isometric3" })));
     app();
 };
 
@@ -21,7 +22,7 @@ const app = async () => {
     if (answers.options == "add") {
         const answer = await inquirer.prompt(addQuestion);
         addNote(answer.add);
-        console.log("adding a note...");
+        console.log(chalk.green("adding a note..."));
         app();
     } else if (answers.options == "list") {
         listNotes();
@@ -30,10 +31,10 @@ const app = async () => {
         listNotes();
         const answer = await inquirer.prompt(removeQuestion);
         removeNote(answer.remove);
-        console.log("removing a note...");
+        console.log(chalk.green("removing a note..."));
         app();
     } else if (answers.options == "exit") {
-        console.log("ok, bye for now");
+        console.log(chalk.red("ok, bye for now"));
     }
 };
 

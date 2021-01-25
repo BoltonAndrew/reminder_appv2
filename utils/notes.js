@@ -1,5 +1,6 @@
 /*jshint esversion:8*/
-const fs = require("fs");
+const fs = require('fs');
+const chalk = require('chalk');
 
 const loadNotes = () => {
     try {
@@ -33,9 +34,9 @@ const removeNote = noteToDelete => {
     const allNotes = loadNotes();
     try {
         const removedItem = allNotes.splice(noteToDelete - 1, 1);
-        console.log(`Successfully removed ${removedItem[0].reminder}`)
+        console.log(`Successfully removed ${removedItem[0].reminder}`);
     } catch (error) {
-        console.log("No note found there")
+        console.log("No note found there");
     }
 
     saveNotes(allNotes);
