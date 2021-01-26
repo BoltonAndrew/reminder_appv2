@@ -1,7 +1,7 @@
 /*jshint esversion:8*/
 const figlet = require('figlet');
 const inquirer = require('inquirer');
-const { addNote, listNotes, removeNote, categoryList } = require('../utils/notes');
+const { addNote, listNotes, removeNote, categoryList, removeCat } = require('../utils/notes');
 const chalk = require('chalk');
 
 const topLevelQuestion = [
@@ -15,6 +15,10 @@ const categoryQuestion = [
 const addQuestion = [{ type: "input", name: "add", message: "What would you like to add?" }];
 
 const removeQuestion = [{ type: "number", name: "remove", message: "What would you like to remove? Please type a number" }];
+
+const removeCatQuestion = [{ type: "input", name: "catRemove", message: "Which category would you like to remove? Please enter category name" }];
+
+const whichRemove = [{ type: "list", name: "which", message: "Would you like to remove a category or a note?", choices: ["category", "note"] }];
 
 const main = () => {
     console.log(chalk.blue(figlet.textSync("Notes App", { font: "isometric3" })));
@@ -35,11 +39,24 @@ const app = async () => {
         listNotes(cat.category);
         app();
     } else if (answers.options == "remove") {
-        const cat = await inquirer.prompt(categoryQuestion);
-        listNotes(cat.category);
-        const answer = await inquirer.prompt(removeQuestion);
-        removeNote(answer.remove, cat.category);
-        console.log(chalk.green("removing a note..."));
+        const which = await inquirer.prompt(whichRemove);
+
+        if (which.which == "category") {
+
+            categoryList();
+            const category = await inquirer.prompt(removeCatQuestion);
+            removeCat(category.catRemove);
+            
+        } else if (which.which == "note") {
+
+            const cat = await inquirer.prompt(categoryQuestion);
+            listNotes(cat.category);
+            const answer = await inquirer.prompt(removeQuestion);
+            removeNote(answer.remove, cat.category);
+            console.log(chalk.green("removing a note..."));
+
+        }
+
         app();
     } else if (answers.options == "exit") {
         console.log(chalk.red("ok, bye for now"));
