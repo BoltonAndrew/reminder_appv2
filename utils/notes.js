@@ -2,7 +2,7 @@
 const fs = require('fs');
 
 const categoryList = () => {
-    console.log("Category List:")
+    console.log("Category List:");
     let files = fs.readdirSync('./json');
     files.map((file, index) => {
         let listItem = file.slice(0, -5);
