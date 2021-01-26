@@ -2,9 +2,9 @@
 const fs = require('fs');
 const chalk = require('chalk');
 
-const loadNotes = () => {
+const loadNotes = (category) => {
     try {
-        const dataBuffer = fs.readFileSync("src/notes.json");
+        const dataBuffer = fs.readFileSync(`src/${category}.json`);
         const notesJson = dataBuffer.toString();
         return JSON.parse(notesJson);
     } catch (error) {
@@ -12,34 +12,34 @@ const loadNotes = () => {
     }
 };
 
-const addNote = myNote => {
-    const allNotes = loadNotes();
-    allNotes.push({reminder: myNote});
-    saveNotes(allNotes);
+const addNote = (myNote, category) => {
+    const currentNotes = loadNotes(category);
+    currentNotes.push({reminder: myNote});
+    saveNotes(currentNotes, category);
 };
 
-const saveNotes = allNotes => {
-    const notesJson = JSON.stringify(allNotes);
-    fs.writeFileSync("src/notes.json", notesJson);
+const saveNotes = (currentNotes, category) => {
+    const notesJson = JSON.stringify(currentNotes);
+    fs.writeFileSync(`src/${category}.json`, notesJson);
 };
 
-const listNotes = () => {
-    const allNotes = loadNotes();
-    allNotes.map((note, index) => {
+const listNotes = (category) => {
+    const currentNotes = loadNotes(category);
+    currentNotes.map((note, index) => {
         console.log(`${index + 1}. ${note.reminder}`);
     });
 };
 
-const removeNote = noteToDelete => {
-    const allNotes = loadNotes();
+const removeNote = (noteToDelete, category) => {
+    const currentNotes = loadNotes(category);
     try {
-        const removedItem = allNotes.splice(noteToDelete - 1, 1);
+        const removedItem = currentNotes.splice(noteToDelete - 1, 1);
         console.log(`Successfully removed ${removedItem[0].reminder}`);
     } catch (error) {
         console.log("No note found there");
     }
 
-    saveNotes(allNotes);
+    saveNotes(currentNotes, category);
 };
 
 module.exports = {
