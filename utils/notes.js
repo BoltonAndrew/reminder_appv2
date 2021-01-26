@@ -49,9 +49,19 @@ const removeNote = (noteToDelete, category) => {
     saveNotes(currentNotes, category);
 };
 
+const removeCat = (category) => {
+    try {
+        fs.unlinkSync(`./json/${category}.json`);
+        console.log(`${category} category successfully deleted`);
+    } catch (error) {
+        console.log("No category by that name, please input category name");
+    }
+};
+
 module.exports = {
     addNote,
     listNotes,
     removeNote,
-    categoryList
+    categoryList,
+    removeCat
 };
