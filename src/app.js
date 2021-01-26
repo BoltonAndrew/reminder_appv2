@@ -12,7 +12,7 @@ const categoryQuestion = [
     { type: "input", name: "category", message: "Please input a current category or type a new category name you would like to create." }
 ];
 
-const addQuestion = [{ type: "input", name: "add", message: "What would you like to add?" }];
+const addQuestion = [{ type: "input", name: "add", message: "What note would you like to add?" }];
 
 const removeQuestion = [{ type: "number", name: "remove", message: "What would you like to remove? Please type a number" }];
 
@@ -29,6 +29,7 @@ const app = async () => {
     const answers = await inquirer.prompt(topLevelQuestion);
     if (answers.options == "add") {
         const answer = await inquirer.prompt(addQuestion);
+        categoryList();
         const cat = await inquirer.prompt(categoryQuestion);
         addNote(answer.add, cat.category);
         console.log(chalk.green("adding a note..."));
@@ -46,9 +47,9 @@ const app = async () => {
             categoryList();
             const category = await inquirer.prompt(removeCatQuestion);
             removeCat(category.catRemove);
-            
-        } else if (which.which == "note") {
 
+        } else if (which.which == "note") {
+            categoryList();
             const cat = await inquirer.prompt(categoryQuestion);
             listNotes(cat.category);
             const answer = await inquirer.prompt(removeQuestion);
