@@ -1,10 +1,17 @@
 /*jshint esversion:8*/
 const fs = require('fs');
-const chalk = require('chalk');
+
+const categoryList = () => {
+    let files = fs.readdirSync('./json');
+    files.map((file, index) => {
+        let listItem = file.slice(0, -5);
+        console.log(`${index + 1}. ${listItem}`);
+    });
+};
 
 const loadNotes = (category) => {
     try {
-        const dataBuffer = fs.readFileSync(`src/${category}.json`);
+        const dataBuffer = fs.readFileSync(`./json/${category}.json`);
         const notesJson = dataBuffer.toString();
         return JSON.parse(notesJson);
     } catch (error) {
@@ -20,7 +27,7 @@ const addNote = (myNote, category) => {
 
 const saveNotes = (currentNotes, category) => {
     const notesJson = JSON.stringify(currentNotes);
-    fs.writeFileSync(`src/${category}.json`, notesJson);
+    fs.writeFileSync(`./json/${category}.json`, notesJson);
 };
 
 const listNotes = (category) => {
@@ -45,5 +52,6 @@ const removeNote = (noteToDelete, category) => {
 module.exports = {
     addNote,
     listNotes,
-    removeNote
+    removeNote,
+    categoryList
 };

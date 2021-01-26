@@ -1,7 +1,7 @@
 /*jshint esversion:8*/
 const figlet = require('figlet');
 const inquirer = require('inquirer');
-const { addNote, listNotes, removeNote } = require('../utils/notes');
+const { addNote, listNotes, removeNote, categoryList } = require('../utils/notes');
 const chalk = require('chalk');
 
 const topLevelQuestion = [
@@ -30,6 +30,7 @@ const app = async () => {
         console.log(chalk.green("adding a note..."));
         app();
     } else if (answers.options == "list") {
+        categoryList();
         const cat = await inquirer.prompt(categoryQuestion); 
         listNotes(cat.category);
         app();
