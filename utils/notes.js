@@ -19,18 +19,18 @@ const categoryList = async () => {
     }
 };
 
-const addNote = async (myNote, category) => {
+const addNote = async (myNote, catStr) => {
     try {
-        const note = new Category({category: category, note: myNote, completed: false});
+        const note = new Category({category: catStr, note: myNote, completed: false});
         await note.save();
     } catch (error) {
         console.log(error);
     }
 };
 
-const listNotes = async (category) => {
+const listNotes = async (catStr) => {
     try {
-        const list = await Category.find({category});
+        const list = await Category.find({ category: catStr });
         list.map((listItem, index) => {
             console.log(`${index + 1}. ${listItem.note}`);
         });
@@ -41,9 +41,9 @@ const listNotes = async (category) => {
 
 };
 
-const removeNote = async (noteToDelete, category) => {
+const removeNote = async (noteToDelete, catStr) => {
     try {
-        const note = await Category.find({category});
+        const note = await Category.find({ category: catStr });
         const noteObj = note[noteToDelete - 1];
         await Category.deleteOne(noteObj);
     } catch (error) {
@@ -51,13 +51,13 @@ const removeNote = async (noteToDelete, category) => {
     }
 };
 
-const removeCat = async (category) => {
+const removeCat = async (catStr) => {
     try {
-        const categories = await Category.find({category});
-        categories.map(async (category) => {
-            await Category.deleteOne(category);
+        const categories = await Category.find({category: catStr});
+        categories.map(async (cat) => {
+            await Category.deleteOne(cat);
         });
-        console.log(`${category} category successfully deleted`);
+        console.log(`${catStr} category successfully deleted`);
     } catch (error) {
         console.log("No category by that name, please input category name");
     }

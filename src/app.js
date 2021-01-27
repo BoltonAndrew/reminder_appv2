@@ -53,7 +53,7 @@ const app = async () => {
         } else if (which.which == "note") {
             await categoryList();
             const cat = await inquirer.prompt(categoryQuestion);
-            listNotes(cat.category);
+            await listNotes(cat.category);
             const answer = await inquirer.prompt(removeQuestion);
             removeNote(answer.remove, cat.category);
             console.log(chalk.green("removing a note..."));
