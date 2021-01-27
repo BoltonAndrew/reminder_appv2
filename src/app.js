@@ -1,4 +1,5 @@
 /*jshint esversion:8*/
+require('./db/connection');
 const figlet = require('figlet');
 const inquirer = require('inquirer');
 const { addNote, listNotes, removeNote, categoryList, removeCat } = require('../utils/notes');
