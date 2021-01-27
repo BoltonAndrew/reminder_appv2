@@ -1,6 +1,4 @@
 /*jshint esversion:8*/
-const fs = require('fs');
-const mongoose = require('mongoose');
 const { Category } = require('../src/models/Category');
 
 const categoryList = async () => {
