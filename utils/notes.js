@@ -2,13 +2,28 @@
 const fs = require('fs');
 const { Category } = require('../src/models/Category');
 
-const categoryList = () => {
+const categoryList = async () => {
     console.log("Category List:");
-    let files = fs.readdirSync('./json');
-    files.map((file, index) => {
-        let listItem = file.slice(0, -5);
-        console.log(`${index + 1}. ${listItem}`);
-    });
+    try {
+        const allEntries = await Category.find({});
+        const categories = [];
+        allEntries.map((entry) => {
+            if(!categories.includes(entry.category)) {
+                categories.push(entry.category);
+            }
+        });
+        categories.map((category, index) => {
+            console.log(`${index + 1}. ${category}`);
+        });
+    } catch (error) {
+        console.log(error);
+    }
+    // console.log("Category List:");
+    // let files = fs.readdirSync('./json');
+    // files.map((file, index) => {
+    //     let listItem = file.slice(0, -5);
+    //     console.log(`${index + 1}. ${listItem}`);
+    // });
 };
 
 const loadNotes = (category) => {
@@ -35,11 +50,15 @@ const saveNotes = (currentNotes, category) => {
     fs.writeFileSync(`./json/${category}.json`, notesJson);
 };
 
-const listFunc = async (searchTerm) => {
-    const list = await Category.find({searchTerm});
-    list.map((listItem, index) => {
-        console.log(`${index + 1}. ${listItem.note}`);
-    });
+const listNotes = async (category) => {
+    try {
+        const list = await Category.find({category});
+        list.map((listItem, index) => {
+            console.log(`${index + 1}. ${listItem.note}`);
+        });
+    } catch (error) {
+        console.log(error);
+    }
 
     // const currentNotes = loadNotes(category);
     // currentNotes.map((note, index) => {
@@ -70,7 +89,7 @@ const removeCat = (category) => {
 
 module.exports = {
     addNote,
-    listFunc,
+    listNotes,
     removeNote,
     categoryList,
     removeCat

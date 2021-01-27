@@ -30,27 +30,27 @@ const app = async () => {
     const answers = await inquirer.prompt(topLevelQuestion);
     if (answers.options == "add") {
         const answer = await inquirer.prompt(addQuestion);
-        categoryList();
+        await categoryList();
         const cat = await inquirer.prompt(categoryQuestion);
         addNote(answer.add, cat.category);
         console.log(chalk.green("adding a note..."));
         app();
     } else if (answers.options == "list") {
-        categoryList();
+        await categoryList();
         const cat = await inquirer.prompt(categoryQuestion); 
-        listNotes(cat.category);
+        await listNotes(cat.category);
         app();
     } else if (answers.options == "remove") {
         const which = await inquirer.prompt(whichRemove);
 
         if (which.which == "category") {
 
-            categoryList();
+            await categoryList();
             const category = await inquirer.prompt(removeCatQuestion);
             removeCat(category.catRemove);
 
         } else if (which.which == "note") {
-            categoryList();
+            await categoryList();
             const cat = await inquirer.prompt(categoryQuestion);
             listNotes(cat.category);
             const answer = await inquirer.prompt(removeQuestion);
