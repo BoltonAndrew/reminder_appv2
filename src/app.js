@@ -4,6 +4,7 @@ const figlet = require('figlet');
 const inquirer = require('inquirer');
 const { addNote, listNotes, removeNote, categoryList, removeCat } = require('../utils/notes');
 const chalk = require('chalk');
+const mongoose = require('mongoose');
 
 const topLevelQuestion = [
     { type: "list", name: "options", message: "What would you like to do?", choices: ["add", "list", "remove", "exit"]}
@@ -47,7 +48,7 @@ const app = async () => {
 
             await categoryList();
             const category = await inquirer.prompt(removeCatQuestion);
-            removeCat(category.catRemove);
+            await removeCat(category.catRemove);
 
         } else if (which.which == "note") {
             await categoryList();
@@ -62,6 +63,7 @@ const app = async () => {
         app();
     } else if (answers.options == "exit") {
         console.log(chalk.red("ok, bye for now"));
+        mongoose.connection.close();
     }
 };
 

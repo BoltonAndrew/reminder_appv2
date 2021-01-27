@@ -1,5 +1,6 @@
 /*jshint esversion:8*/
 const fs = require('fs');
+const mongoose = require('mongoose');
 const { Category } = require('../src/models/Category');
 
 const categoryList = async () => {
@@ -18,22 +19,6 @@ const categoryList = async () => {
     } catch (error) {
         console.log(error);
     }
-    // console.log("Category List:");
-    // let files = fs.readdirSync('./json');
-    // files.map((file, index) => {
-    //     let listItem = file.slice(0, -5);
-    //     console.log(`${index + 1}. ${listItem}`);
-    // });
-};
-
-const loadNotes = (category) => {
-    try {
-        const dataBuffer = fs.readFileSync(`./json/${category}.json`);
-        const notesJson = dataBuffer.toString();
-        return JSON.parse(notesJson);
-    } catch (error) {
-        return [];
-    }
 };
 
 const addNote = async (myNote, category) => {
@@ -45,11 +30,6 @@ const addNote = async (myNote, category) => {
     }
 };
 
-const saveNotes = (currentNotes, category) => {
-    const notesJson = JSON.stringify(currentNotes);
-    fs.writeFileSync(`./json/${category}.json`, notesJson);
-};
-
 const listNotes = async (category) => {
     try {
         const list = await Category.find({category});
@@ -57,30 +37,28 @@ const listNotes = async (category) => {
             console.log(`${index + 1}. ${listItem.note}`);
         });
     } catch (error) {
-        console.log(error);
+        console.log("Category not found");
     }
 
-    // const currentNotes = loadNotes(category);
-    // currentNotes.map((note, index) => {
-    //     console.log(`${index + 1}. ${note.reminder}`);
-    // });
+
 };
 
-const removeNote = (noteToDelete, category) => {
-    const currentNotes = loadNotes(category);
+const removeNote = async (noteToDelete, category) => {
     try {
-        const removedItem = currentNotes.splice(noteToDelete - 1, 1);
-        console.log(`Successfully removed ${removedItem[0].reminder}`);
+        const note = await Category.find({category});
+        const noteObj = note[noteToDelete - 1];
+        await Category.deleteOne(noteObj);
     } catch (error) {
-        console.log("No note found there");
+        console.log("Incorrect note number");
     }
-
-    saveNotes(currentNotes, category);
 };
 
-const removeCat = (category) => {
+const removeCat = async (category) => {
     try {
-        fs.unlinkSync(`./json/${category}.json`);
+        const categories = await Category.find({category});
+        categories.map(async (category) => {
+            await Category.deleteOne(category);
+        });
         console.log(`${category} category successfully deleted`);
     } catch (error) {
         console.log("No category by that name, please input category name");
