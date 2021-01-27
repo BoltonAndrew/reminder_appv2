@@ -1,5 +1,6 @@
 /*jshint esversion:8*/
 const fs = require('fs');
+const { Category } = require('../src/models/Category');
 
 const categoryList = () => {
     console.log("Category List:");
@@ -20,10 +21,13 @@ const loadNotes = (category) => {
     }
 };
 
-const addNote = (myNote, category) => {
-    const currentNotes = loadNotes(category);
-    currentNotes.push({reminder: myNote});
-    saveNotes(currentNotes, category);
+const addNote = async (myNote, category) => {
+    try {
+        const note = new Category({category: category, note: myNote, completed: false});
+        await note.save();
+    } catch (error) {
+        console.log(error);
+    }
 };
 
 const saveNotes = (currentNotes, category) => {
@@ -31,11 +35,16 @@ const saveNotes = (currentNotes, category) => {
     fs.writeFileSync(`./json/${category}.json`, notesJson);
 };
 
-const listNotes = (category) => {
-    const currentNotes = loadNotes(category);
-    currentNotes.map((note, index) => {
-        console.log(`${index + 1}. ${note.reminder}`);
+const listFunc = async (searchTerm) => {
+    const list = await Category.find({searchTerm});
+    list.map((listItem, index) => {
+        console.log(`${index + 1}. ${listItem.note}`);
     });
+
+    // const currentNotes = loadNotes(category);
+    // currentNotes.map((note, index) => {
+    //     console.log(`${index + 1}. ${note.reminder}`);
+    // });
 };
 
 const removeNote = (noteToDelete, category) => {
@@ -61,7 +70,7 @@ const removeCat = (category) => {
 
 module.exports = {
     addNote,
-    listNotes,
+    listFunc,
     removeNote,
     categoryList,
     removeCat
